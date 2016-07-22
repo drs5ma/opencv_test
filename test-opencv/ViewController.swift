@@ -74,7 +74,7 @@ class ViewController: UIViewController {
     @IBAction func Click(sender: AnyObject) {
         
         if(drewSomething == true ){
-            temp = Touch.image;// UIImage(data: (UIImagePNGRepresentation(Touch.image!))!);
+            temp =  UIImage(data: (UIImagePNGRepresentation(Touch.image!))!);
             
             Touch.image = nil;
             Touch.layer.borderColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0).CGColor
@@ -83,7 +83,7 @@ class ViewController: UIViewController {
             Touch.alpha = 1.0;
             Touch.layer.zPosition = 24;
             Touch.backgroundColor = UIColor.clearColor();
-            Touch.image = OpenCVWrapper.cleanse(Touch.image);
+            Touch.image = OpenCVWrapper.clearCanvas();
             
             Mask.image = nil;
             Mask.layer.borderColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0).CGColor
@@ -101,8 +101,7 @@ class ViewController: UIViewController {
             Difference.alpha = 1.0;
             Difference.backgroundColor = UIColor.clearColor();
             
-            Difference.image = OpenCVWrapper.subtractImages( Mask.image , Spiral.image );
-
+            Difference.image = OpenCVWrapper.subtractImages(temp, Spiral.image );
             drewSomething = false;
         }
         

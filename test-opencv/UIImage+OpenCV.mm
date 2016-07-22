@@ -1,27 +1,31 @@
 #import "UIImage+OpenCV.h"
 
 @implementation UIImage (OpenCV)
-
 - (cv::Mat) toCVImage
 {
     CGColorSpaceRef colorSpace = CGImageGetColorSpace(self.CGImage);
+
     CGFloat cols = self.size.width;
     CGFloat rows = self.size.height;
+    
     cv::Mat cvMat(rows, cols, CV_8UC4); // 8 bits per component, 4 channels (color channels + alpha)
     
+    //<Error>: CGBitmapContextCreate: unsupported parameter combination:
     CGContextRef contextRef = CGBitmapContextCreate(cvMat.data,                 // Pointer to  data
                                                     cols,                       // Width of bitmap
                                                     rows,                       // Height of bitmap
                                                     8,                          // Bits per component
                                                     cvMat.step[0],              // Bytes per row
                                                     colorSpace,                 // Colorspace
-                                                    kCGImageAlphaNoneSkipLast |
-                                                    kCGBitmapByteOrderDefault); // Bitmap info flags
+                                                    kCGImageAlphaNoneSkipLast); // Bitmap info flags  |kCGBitmapByteOrderDefault
+
+    // <Error>: CGContextDrawImage: invalid context 0x0.
     CGContextDrawImage(contextRef, CGRectMake(0, 0, cols, rows), self.CGImage);
     CGContextRelease(contextRef);
-    
     cv::cvtColor(cvMat, cvMat, CV_RGBA2GRAY);
     
+    //cv::threshold(cvMat, cvMat, 100, 255, cv::THRESH_BINARY);
+
     return cvMat;
 }
 
